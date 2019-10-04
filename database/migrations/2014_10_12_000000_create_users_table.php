@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -22,8 +23,15 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+        $this->defaultAdmin();
     }
 
+    public function defaultAdmin(){
+        $data['name'] = "Admin";
+        $data['email'] = "admin@larab4.com";
+        $data['password'] = bcrypt('123456');
+        DB::table('users')->insert($data);
+    }
     /**
      * Reverse the migrations.
      *
