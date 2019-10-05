@@ -36,6 +36,22 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|max:255|alpha|min:5',
+            'email' => 'required|email',
+            'password' => [
+                'required',
+                'string',
+                'min:6',             // must be at least 10 characters in length
+                'regex:/[a-z]/',      // must contain at least one lowercase letter
+                'regex:/[A-Z]/',      // must contain at least one uppercase letter
+                'regex:/[0-9]/',      // must contain at least one digit
+                'regex:/[@$!%*#?&]/', // must contain a special character
+            ],
+
+        ]);
+
+
         $data['name'] = $request->name;
         $data['email'] = $request->email;
         $data['password'] = bcrypt($request->password);
@@ -76,6 +92,24 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|max:255|alpha|min:5',
+            'email' => 'required|email',
+
+            'password' => [
+                'required',
+                'string',
+                'min:6',             // must be at least 10 characters in length
+                'regex:/[a-z]/',      // must contain at least one lowercase letter
+                'regex:/[A-Z]/',      // must contain at least one uppercase letter
+                'regex:/[0-9]/',      // must contain at least one digit
+                'regex:/[@$!%*#?&]/', // must contain a special character
+            ],
+
+        ]);
+
+
+
         $data['name'] = $request->name;
         $data['email'] = $request->email;
         if($request->password != null)
@@ -95,6 +129,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+
         User::destroy($id);
         session()->flash('success','User deleted successfully');
         return redirect()->route('user.index');
